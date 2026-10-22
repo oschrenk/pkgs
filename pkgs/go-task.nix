@@ -9,7 +9,6 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "go-task";
   version = "3.54.0";
 
-  # ponytail: aarch64-darwin only, because nix-update bumps one src hash; add x86_64 if a non-arm Mac comes back
   src = fetchurl {
     url = "https://github.com/go-task/task/releases/download/v${finalAttrs.version}/task_darwin_arm64.tar.gz";
     hash = "sha256-Eqafzze7jVvJFQxE+ak2d1tz5Z/wRMLCRSMvGYwTVjc=";
