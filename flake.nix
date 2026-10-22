@@ -10,13 +10,11 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
-      # every pkgs/<name>.nix becomes packages.<system>.<name>
       packages.${system} = pkgs.lib.packagesFromDirectoryRecursive {
         inherit (pkgs) callPackage;
         directory = ./pkgs;
       };
 
-      # lets `nix flake check` build every package
       checks.${system} = self.packages.${system};
     };
 }
