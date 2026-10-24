@@ -1,0 +1,21 @@
+Search the Claude Code config dirs under ~/.config/claude as well.
+Upstream hardcodes ~/.claude/projects; the app starts without a shell
+environment, so CLAUDE_CONFIG_DIR cannot point it elsewhere.
+diff --git a/Sources/DespacerCore/TranscriptMatcher.swift b/Sources/DespacerCore/TranscriptMatcher.swift
+index ff5ae0d..9fef218 100644
+--- a/Sources/DespacerCore/TranscriptMatcher.swift
++++ b/Sources/DespacerCore/TranscriptMatcher.swift
+@@ -10,7 +10,12 @@ public enum TranscriptMatcher {
+ 
+     public static var defaultRoots: [URL] {
+         let home = FileManager.default.homeDirectoryForCurrentUser
+-        return [home.appendingPathComponent(".claude/projects"), home.appendingPathComponent(".codex/sessions")]
++        return [
++            home.appendingPathComponent(".config/claude/personal/projects"),
++            home.appendingPathComponent(".config/claude/work/projects"),
++            home.appendingPathComponent(".claude/projects"),
++            home.appendingPathComponent(".codex/sessions"),
++        ]
+     }
+ 
+     /// Searches transcripts modified within `maxAge`, newest first, reading only
