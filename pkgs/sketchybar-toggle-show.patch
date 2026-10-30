@@ -1,0 +1,69 @@
+Resolve sketchybar through PATH when it is not in a Homebrew prefix, and
+show the bar with `hidden=off topmost=on` only: the animated y_offset leaves
+item mouse tracking at the old position, and a menu bar reveal lifts
+MenuBarAgent above the bar until topmost is set again.
+diff --git a/Sources/SketchyBarToggleCore/PrerequisiteChecker.swift b/Sources/SketchyBarToggleCore/PrerequisiteChecker.swift
+index 9708c07..46a6961 100644
+--- a/Sources/SketchyBarToggleCore/PrerequisiteChecker.swift
++++ b/Sources/SketchyBarToggleCore/PrerequisiteChecker.swift
+@@ -33,7 +33,10 @@ public final class PrerequisiteChecker {
+         } else if FileManager.default.fileExists(atPath: "/usr/local/bin/sketchybar") {
+             sketchybarPath = "/usr/local/bin/sketchybar"
+         } else {
+-            sketchybarPath = "sketchybar"
++            sketchybarPath = ProcessInfo.processInfo.environment["PATH"]?
++                .split(separator: ":")
++                .map { "\($0)/sketchybar" }
++                .first { FileManager.default.isExecutableFile(atPath: $0) } ?? "sketchybar"
+         }
+     }
+ 
+diff --git a/Sources/SketchyBarToggleCore/SketchyBarController.swift b/Sources/SketchyBarToggleCore/SketchyBarController.swift
+index bfb2487..be104b1 100644
+--- a/Sources/SketchyBarToggleCore/SketchyBarController.swift
++++ b/Sources/SketchyBarToggleCore/SketchyBarController.swift
+@@ -10,7 +10,10 @@ public final class SketchyBarController: BarController {
+         } else if FileManager.default.fileExists(atPath: "/usr/local/bin/sketchybar") {
+             sketchybarPath = "/usr/local/bin/sketchybar"
+         } else {
+-            sketchybarPath = "sketchybar"
++            sketchybarPath = ProcessInfo.processInfo.environment["PATH"]?
++                .split(separator: ":")
++                .map { "\($0)/sketchybar" }
++                .first { FileManager.default.isExecutableFile(atPath: $0) } ?? "sketchybar"
+         }
+     }
+ 
+@@ -20,9 +23,9 @@ public final class SketchyBarController: BarController {
+     }
+ 
+     public func show() {
+-        // Unhide off-screen, then animate sliding down
+-        run(arguments: ["--bar", "hidden=off", "y_offset=-50"])
+-        runAsync(arguments: ["--animate", "sin", "12", "--bar", "y_offset=0"])
++        // An animated y_offset leaves item mouse tracking at the old position,
++        // and the menu bar reveal lifts MenuBarAgent above the bar until topmost is set again
++        run(arguments: ["--bar", "hidden=off", "topmost=on"])
+     }
+ 
+     private func run(arguments: [String]) {
+@@ -39,19 +42,4 @@ public final class SketchyBarController: BarController {
+             // sketchybar may not be running — fail silently
+         }
+     }
+-
+-    private func runAsync(arguments: [String]) {
+-        let process = Process()
+-        process.executableURL = URL(fileURLWithPath: sketchybarPath)
+-        process.arguments = arguments
+-        process.standardOutput = FileHandle.nullDevice
+-        process.standardError = FileHandle.nullDevice
+-
+-        do {
+-            try process.run()
+-            // Don't wait — sketchybar handles animation asynchronously
+-        } catch {
+-            // sketchybar may not be running — fail silently
+-        }
+-    }
+ }
