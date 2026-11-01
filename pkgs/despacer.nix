@@ -7,7 +7,7 @@
 
 swiftPackages.stdenv.mkDerivation {
   pname = "despacer";
-  version = "1.0-unstable-2026-10-22";
+  version = "0-unstable-2026-10-22";
 
   # Upstream has no tags or releases, so this pins a revision.
   src = fetchFromGitHub {
