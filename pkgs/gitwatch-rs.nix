@@ -16,11 +16,11 @@ rustPlatform.buildRustPackage rec {
   src = fetchFromGitHub {
     owner = "oschrenk";
     repo = "gitwatch-rs";
-    rev = "38160beaf2734a39608f5e58bd89860455bf31a1";
-    hash = "sha256-KoZPICCfsh+dDt2XBCUoAzR52opoG9QiphaZ/oXgqE8=";
+    rev = "244304b89420488b2f691f1bbf9d61afc09a1039";
+    hash = "sha256-34KqMAHDWIy2E/0EpTHQ9RkO2CFZAplPX1IIGpz+RyA=";
   };
 
-  cargoHash = "sha256-axMa1xgAoW9PA43kjuJMOxwLEgHuFxPK+0vt4kHPMxM=";
+  cargoHash = "sha256-f6bwbp9aEGwSl47j6WQQkToDJpSmrFHQMyR02kxo5H8=";
 
   nativeBuildInputs = [ pkg-config ];
   buildInputs = [
