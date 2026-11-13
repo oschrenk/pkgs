@@ -7,14 +7,14 @@
 
 swiftPackages.stdenv.mkDerivation {
   pname = "despacer";
-  version = "1.0-unstable-2026-10-22";
+  version = "0-unstable-2026-11-10";
 
   # Upstream has no tags or releases, so this pins a revision.
   src = fetchFromGitHub {
     owner = "MattSenter";
     repo = "despacer";
-    rev = "aa9f75ca9bd7611e714b83352a89ca5c39265c85";
-    hash = "sha256-m4RjEf2eXox1tvVFF82PkuukvZDxUENV4mB0qjPlY9A=";
+    rev = "cc5656f385d5c2ee7a47ac65468d5b098c965d1f";
+    hash = "sha256-U715y4igH5R047Y1u7iJFLn6yjHJKxQkGjJUI+xRY/w=";
   };
 
   # Point the transcript lookup at ~/.config/claude; see patch header.
