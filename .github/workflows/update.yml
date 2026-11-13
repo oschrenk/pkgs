@@ -33,6 +33,7 @@ jobs:
         with:
           name: oschrenk
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - run: nix flake archive
       - id: update
         env:
           PACKAGE: ${{ matrix.package }}
