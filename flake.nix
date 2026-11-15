@@ -6,15 +6,26 @@
   outputs =
     { self, nixpkgs }:
     let
-      system = "aarch64-darwin";
-      pkgs = nixpkgs.legacyPackages.${system};
+      inherit (nixpkgs) lib;
+      systems = [
+        "aarch64-darwin"
+        "aarch64-linux"
+      ];
     in
     {
-      packages.${system} = pkgs.lib.packagesFromDirectoryRecursive {
-        inherit (pkgs) callPackage;
-        directory = ./pkgs;
-      };
+      packages = lib.genAttrs systems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        lib.filterAttrs (_: lib.meta.availableOn pkgs.stdenv.hostPlatform) (
+          lib.packagesFromDirectoryRecursive {
+            inherit (pkgs) callPackage;
+            directory = ./pkgs;
+          }
+        )
+      );
 
-      checks.${system} = self.packages.${system};
+      checks = self.packages;
     };
 }
