@@ -17,7 +17,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: cachix/install-nix-action@v31
       - id: list
-        run: echo "packages=$(nix eval --json .#packages.aarch64-darwin --apply builtins.attrNames)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "packages=$(nix eval --json .#packages.aarch64-darwin --apply 'ps: builtins.attrNames (removeAttrs ps [ "opnix" ])')" >> "$GITHUB_OUTPUT"
 
   update:
     needs: discover
